@@ -1,14 +1,19 @@
-import type { Route } from "./+types/home";
+import GenericHeader from '~/components/generic/header/GenericHeader'
+import type { Route } from './+types/home'
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Home - Smart Home System" },
-    { name: "description", content: "This is your home dashboard!" },
-  ];
+    // We zetten Smart Home System hier achteraf wel bij.
+    { title: 'Home' },
+    { name: 'description', content: 'This is your home dashboard!' },
+  ]
 }
 
 export default function Home() {
-  const name: string = "Marty";
-
-  return <p>This is fun...</p>;
+  return (
+    <>
+      <GenericHeader location="Home" />
+      <p>This is fun...</p>
+    </>
+  )
 }
