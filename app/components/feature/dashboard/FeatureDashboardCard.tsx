@@ -30,7 +30,9 @@ const FeatureDashboardCard = ({
       <header className="card-header">
         {/* AI: added this gem of a piece of code... */}
         {React.isValidElement(icon)
-          ? React.cloneElement(icon, { className: 'card-icon' })
+          ? React.cloneElement(icon, {
+              className: 'card-icon',
+            })
           : icon}
 
         <h2 className="card-title">{title}</h2>

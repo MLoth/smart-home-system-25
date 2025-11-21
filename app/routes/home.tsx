@@ -16,6 +16,7 @@ import FeatureDataText from '~/components/feature/data/FeatureDataText'
 import FeatureDataEnergy from '~/components/feature/data/FeatureDataEnergy'
 import GenericFooter from '~/components/generic/footer/GenericFooter'
 import { useEffect, useState } from 'react'
+import type { InputData } from '~/interfaces/api.interface'
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -26,14 +27,33 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const [efficieny, setEfficieny] = useState()
-  const [input, setInput] = useState()
+  const [efficiency, setEfficiency] = useState<number>()
+  const [animatedEfficiency, setAnimatedEfficiency] = useState<number>(0)
+  const [input, setInput] = useState<InputData[]>()
+
+  const startEfficiencyAnimation = () => {
+    if (!efficiency) return
+
+    const interval = setInterval(() => {
+      setAnimatedEfficiency(prev => {
+        console.log('animatedEfficiency', prev, efficiency)
+        if (prev >= efficiency) {
+          clearInterval(interval)
+          return prev
+        } else {
+          return Math.floor(prev! + Math.random() * 2)
+        }
+      })
+    }, 10)
+  }
 
   const getEfficiency = async () => {
     const data = await fetch(
       'https://mct-marty.be/smart-home-systems/efficiency',
     ).then(r => r.json())
-    setEfficieny(data.efficiency)
+    setEfficiency(() => {
+      return data.efficiency
+    })
   }
 
   const getInputData = async () => {
@@ -50,27 +70,45 @@ export default function Home() {
     // [] blijft altijd een array, dus zal nooit rerenderen
   }, [])
 
+  useEffect(() => {
+    startEfficiencyAnimation()
+  }, [efficiency])
+
   return (
     <>
       <GenericHeader location="Home" />
 
       <FeatureDashboardSegment
         title="Efficieny"
-        singleDataValue={efficieny ? `${efficieny}%` : 'Loading...'}
+        singleDataValue={
+          animatedEfficiency ? `${animatedEfficiency}%` : 'Loading...'
+        }
       />
 
       <FeatureDashboardSegment title="Input">
-        <FeatureDashboardCard icon={<Sun />} title="solar output" colSpan={4}>
-          <FeatureDataEnergy amount={8.7} unit="kWh" trend="up" />
-        </FeatureDashboardCard>
+        {input && input[0] && (
+          <FeatureDashboardCard
+            icon={<Sun />}
+            title={input[0].label}
+            colSpan={4}
+          >
+            <FeatureDataEnergy
+              amount={input[0].value}
+              unit={input[0].unit}
+              trend={input[0].trend}
+            />
+          </FeatureDashboardCard>
+        )}
 
-        <FeatureDashboardCard
-          icon={<Wind />}
-          title="wind generation"
-          colSpan={4}
-        >
-          <FeatureDataEnergy amount={2.3} unit="kWh" trend="down" />
-        </FeatureDashboardCard>
+        {input && input[1] && (
+          <FeatureDashboardCard
+            icon={<Wind />}
+            title="wind generation"
+            colSpan={4}
+          >
+            <FeatureDataEnergy amount={2.3} unit="kWh" trend="down" />
+          </FeatureDashboardCard>
+        )}
       </FeatureDashboardSegment>
 
       <FeatureDashboardSegment title="Output">
