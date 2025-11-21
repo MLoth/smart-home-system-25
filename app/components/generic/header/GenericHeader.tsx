@@ -12,13 +12,14 @@ const GenericHeader = ({ location }: { location: string }) => {
             System
           </h1>
 
-          <nav>
+          <nav className="generic-header-nav">
             <img
-              // src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
+              className="profile"
+              src="/simon.png"
               alt="Smart Home System Logo"
             />
-            <button>
-              <Settings />
+            <button className="action">
+              <Settings className="action-icon" />
             </button>
           </nav>
         </div>
