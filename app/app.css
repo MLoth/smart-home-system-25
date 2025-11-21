@@ -8,10 +8,19 @@ body {
   font-family: 'Atkinson Hyperlegible', sans-serif;
 }
 
-/* header */
-.generic-header {
+/* generic ui */
+.generic-ui-row {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.generic-ui-wrapper {
   max-width: 60rem;
   margin: 0 auto;
+}
+
+/* header */
+.generic-header {
   padding: 1.5rem 0;
   display: flex;
   justify-content: space-between;
